@@ -1,4 +1,4 @@
-namespace Domain.UserOrder;
+namespace Domain;
 
 public enum OrderStatus
 {

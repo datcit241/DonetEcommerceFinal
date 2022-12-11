@@ -1,6 +1,7 @@
-namespace Domain.Image;
+namespace Domain;
 
 public class Image
 {
-    
+    public Guid Id { get; set; }
+    public string Extension { get; set; }
 }

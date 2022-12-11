@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class DiscountProducts
+public class DiscountProduct
 {
     public Guid ProductId { get; set; }
     public Product Product { get; set; }
