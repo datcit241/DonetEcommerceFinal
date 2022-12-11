@@ -6,4 +6,5 @@ public class CustomerOrder
     public OrderStatus Status { get; set; }
     public User User { get; set; }
     public DateTime OrderDate { get; set; }
+    public ICollection<OrderDetails> OrderDetails { get; set; }
 }

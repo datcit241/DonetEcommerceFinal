@@ -7,4 +7,5 @@ public class OrderDetails
     public int Quantity { get; set; }
     public double Price { get; set; }
     public double Discount { get; set; }
+    public Rating? Rating { get; set; }
 }

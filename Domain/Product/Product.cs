@@ -14,5 +14,4 @@ public class Product
     public ICollection<OrderDetails> OrderDetails { get; set; }
     public ICollection<CartDetails> CartDetails { get; set; }
     public ICollection<ProductVariation> Variations { get; set; }
-    public ICollection<Rating> Ratings { get; set; }
 }

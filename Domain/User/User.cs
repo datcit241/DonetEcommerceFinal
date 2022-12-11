@@ -8,6 +8,6 @@ public class User : IdentityUser
     public Image? Avatar { get; set; }
     public Cart Cart { get; set; }
     public ICollection<CustomerOrder> OrderHistory { get; set; }
-    public ICollection<CouponUser> CouponUsers { get; set; }
+    public ICollection<CouponUser> EligibleCoupons { get; set; }
     public ICollection<Rating> Ratings { get; set; }
 }
