@@ -1,8 +1,8 @@
 namespace Domain;
 
-public class ProductLabel
+public enum ProductLabel
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string? Color { get; set; }
+    New,
+    Sale,
+    BestSeller
 }
