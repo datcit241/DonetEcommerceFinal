@@ -7,4 +7,5 @@ public class Coupon
     public int Quantity { get; set; }
     public double Amount { get; set; }
     public ICollection<CouponUser> Users { get; set; }
+    public ICollection<CustomerOrder> CustomerOrders { get; set; }
 }

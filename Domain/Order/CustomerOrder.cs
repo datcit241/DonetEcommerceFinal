@@ -7,4 +7,6 @@ public class CustomerOrder
     public User User { get; set; }
     public DateTime OrderDate { get; set; }
     public ICollection<OrderDetails> OrderDetails { get; set; }
+    public ICollection<Rating> Ratings { get; set; }
+    public Coupon Coupon { get; set; }
 }
