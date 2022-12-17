@@ -9,5 +9,5 @@ public class Rating
     public Guid ProductId { get; set; }
     public Product Product { get; set; }
     public int Value { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
 }

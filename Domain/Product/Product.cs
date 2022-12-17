@@ -7,7 +7,7 @@ public class Product
     public string? Description { get; set; }
     public ICollection<Image> Images { get; set; }
     public ICollection<Price> Prices { get; set; }
-    public ProductLabel? Label { get; set; }
+    public ProductLabel Label { get; set; }
     public int Quantity { get; set; }
     public ICollection<DiscountProduct> Discounts { get; set; }
     public ProductStatus Status { get; set; }

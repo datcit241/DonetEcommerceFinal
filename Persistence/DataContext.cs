@@ -32,112 +32,116 @@ public class DataContext : IdentityDbContext<User>
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<ProductCategory>(entity => entity.HasKey(
-            productCategory => new { productCategory.ProductId, productCategory.CategoryValueId }
-        ));
-        builder.Entity<ProductCategory>()
-            .HasOne(entity => entity.Product)
-            .WithMany(product => product.Categories)
-            .HasForeignKey(entity => entity.ProductId);
-        builder.Entity<ProductCategory>()
-            .HasOne(entity => entity.Category)
-            .WithMany(category => category.Products)
-            .HasForeignKey(entity => entity.CategoryId);
-        builder.Entity<ProductCategory>()
-            .HasOne(entity => entity.CategoryValue)
-            .WithMany(categoryValue => categoryValue.Products)
-            .HasForeignKey(entity => entity.CategoryValueId);
+        // builder.Entity<Price>()
+        //     .HasOne(entity => entity.Product)
+        //     .WithMany(entity => entity.Prices)
+        //     .HasForeignKey(entity => entity.ProductId);
+
+        builder.Entity<ProductCategory>(productCategory =>
+        {
+            productCategory.HasKey(entity => new { entity.ProductId, entity.CategoryValueId });
+
+            // productCategory.HasOne(entity => entity.Product)
+            //     .WithMany(product => product.Categories)
+            //     .HasForeignKey(entity => entity.ProductId);
+            // productCategory.HasOne(entity => entity.Category)
+            //     .WithMany(category => category.Products)
+            //     .HasForeignKey(entity => entity.CategoryId);
+            // productCategory.HasOne(entity => entity.CategoryValue)
+            //     .WithMany(categoryValue => categoryValue.Products)
+            //     .HasForeignKey(entity => entity.CategoryValueId);
+        });
 
         builder.Entity<ProductVariation>(entity => entity.HasKey(
             productVariation => new { productVariation.VariationId, productVariation.ProductId }
         ));
-        builder.Entity<ProductVariation>()
-            .HasOne(entity => entity.Variation)
-            .WithMany(variation => variation.ProductVariations)
-            .HasForeignKey(entity => entity.VariationId);
-        builder.Entity<ProductVariation>()
-            .HasOne(entity => entity.Product)
-            .WithMany(product => product.Variations)
-            .HasForeignKey(entity => entity.ProductId);
+        // builder.Entity<ProductVariation>()
+        //     .HasOne(entity => entity.Variation)
+        //     .WithMany(variation => variation.ProductVariations)
+        //     .HasForeignKey(entity => entity.VariationId);
+        // builder.Entity<ProductVariation>()
+        //     .HasOne(entity => entity.Product)
+        //     .WithMany(product => product.Variations)
+        //     .HasForeignKey(entity => entity.ProductId);
 
         builder.Entity<CartDetails>(entity => entity.HasKey(
             cartDetails => new { cartDetails.CartId, cartDetails.ProductId, cartDetails.VariationOptionId }
         ));
-        builder.Entity<CartDetails>()
-            .HasOne(entity => entity.Cart)
-            .WithMany(cart => cart.CartDetails)
-            .HasForeignKey(entity => entity.CartId);
-        builder.Entity<CartDetails>()
-            .HasOne(entity => entity.Product)
-            .WithMany(product => product.CartDetails)
-            .HasForeignKey(entity => entity.ProductId);
-        builder.Entity<CartDetails>()
-            .HasOne(entity => entity.Variation)
-            .WithMany(variation => variation.CartDetails)
-            .HasForeignKey(entity => entity.VariationId);
-        builder.Entity<CartDetails>()
-            .HasOne(entity => entity.VariationOption)
-            .WithMany(variationOption => variationOption.CartDetails)
-            .HasForeignKey(entity => entity.VariationOptionId);
+        // builder.Entity<CartDetails>()
+        //     .HasOne(entity => entity.Cart)
+        //     .WithMany(cart => cart.CartDetails)
+        //     .HasForeignKey(entity => entity.CartId);
+        // builder.Entity<CartDetails>()
+        //     .HasOne(entity => entity.Product)
+        //     .WithMany(product => product.CartDetails)
+        //     .HasForeignKey(entity => entity.ProductId);
+        // builder.Entity<CartDetails>()
+        //     .HasOne(entity => entity.Variation)
+        //     .WithMany(variation => variation.CartDetails)
+        //     .HasForeignKey(entity => entity.VariationId);
+        // builder.Entity<CartDetails>()
+        //     .HasOne(entity => entity.VariationOption)
+        //     .WithMany(variationOption => variationOption.CartDetails)
+        //     .HasForeignKey(entity => entity.VariationOptionId);
 
         builder.Entity<CouponUser>(entity => entity.HasKey(
             couponUser => new { couponUser.CouponId, couponUser.UserId }
         ));
-        builder.Entity<CouponUser>()
-            .HasOne(entity => entity.Coupon)
-            .WithMany(coupon => coupon.Users)
-            .HasForeignKey(entity => entity.CouponId);
-        builder.Entity<CouponUser>()
-            .HasOne(entity => entity.User)
-            .WithMany(user => user.Coupons)
-            .HasForeignKey(entity => entity.UserId);
+        // builder.Entity<CouponUser>()
+        //     .HasOne(entity => entity.Coupon)
+        //     .WithMany(coupon => coupon.Users)
+        //     .HasForeignKey(entity => entity.CouponId);
+        // builder.Entity<CouponUser>()
+        //     .HasOne(entity => entity.User)
+        //     .WithMany(user => user.Coupons)
+        //     .HasForeignKey(entity => entity.UserId);
 
         builder.Entity<DiscountProduct>(entity => entity.HasKey(
             discountProduct => new { discountProduct.ProductId, discountProduct.DiscountId }
         ));
-        builder.Entity<DiscountProduct>()
-            .HasOne(entity => entity.Discount)
-            .WithMany(discount => discount.AppliedProducts)
-            .HasForeignKey(entity => entity.DiscountId);
-        builder.Entity<DiscountProduct>()
-            .HasOne(entity => entity.Product)
-            .WithMany(product => product.Discounts)
-            .HasForeignKey(entity => entity.ProductId);
+        // builder.Entity<DiscountProduct>()
+        //     .HasOne(entity => entity.Discount)
+        //     .WithMany(discount => discount.AppliedProducts)
+        //     .HasForeignKey(entity => entity.DiscountId);
+        // builder.Entity<DiscountProduct>()
+        //     .HasOne(entity => entity.Product)
+        //     .WithMany(product => product.Discounts)
+        //     .HasForeignKey(entity => entity.ProductId);
 
         builder.Entity<OrderDetails>(entity => entity.HasKey(
             orderDetails => new { orderDetails.CustomerOrderId, orderDetails.ProductId, orderDetails.VariationOptionId }
         ));
-        builder.Entity<OrderDetails>()
-            .HasOne(entity => entity.CustomerOrder)
-            .WithMany(customerOrder => customerOrder.OrderDetails)
-            .HasForeignKey(entity => entity.CustomerOrderId);
-        builder.Entity<OrderDetails>()
-            .HasOne(entity => entity.Product)
-            .WithMany(product => product.OrderDetails)
-            .HasForeignKey(entity => entity.ProductId);
-        builder.Entity<OrderDetails>()
-            .HasOne(entity => entity.Variation)
-            .WithMany(variation => variation.OrderDetails)
-            .HasForeignKey(entity => entity.VariationId);
-        builder.Entity<OrderDetails>()
-            .HasOne(entity => entity.VariationOption)
-            .WithMany(variationOption => variationOption.OrderDetails)
-            .HasForeignKey(entity => entity.VariationOptionId);
+        // builder.Entity<OrderDetails>()
+        //     .HasOne(entity => entity.CustomerOrder)
+        //     .WithMany(customerOrder => customerOrder.OrderDetails)
+        //     .HasForeignKey(entity => entity.CustomerOrderId);
+        // builder.Entity<OrderDetails>()
+        //     .HasOne(entity => entity.Product)
+        //     .WithMany(product => product.OrderDetails)
+        //     .HasForeignKey(entity => entity.ProductId);
+        // builder.Entity<OrderDetails>()
+        //     .HasOne(entity => entity.Variation)
+        //     .WithMany(variation => variation.OrderDetails)
+        //     .HasForeignKey(entity => entity.VariationId);
+        // builder.Entity<OrderDetails>()
+        //     .HasOne(entity => entity.VariationOption)
+        //     .WithMany(variationOption => variationOption.OrderDetails)
+        //     .HasForeignKey(entity => entity.VariationOptionId);
 
         builder.Entity<Rating>(entity => entity.HasKey(
             rating => new { rating.CustomerOrderId, rating.UserId, rating.ProductId }
         ));
-        builder.Entity<Rating>()
-            .HasOne(entity => entity.CustomerOrder)
-            .WithMany(entity => entity.Ratings)
-            .HasForeignKey(rating => rating.CustomerOrderId);
-        builder.Entity<Rating>()
-            .HasOne(entity => entity.User)
-            .WithMany(entity => entity.Ratings)
-            .HasForeignKey(rating => rating.UserId);
-        builder.Entity<Rating>()
-            .HasOne(entity => entity.Product)
-            .WithMany(entity => entity.Ratings)
-            .HasForeignKey(rating => rating.ProductId);
+        // builder.Entity<Rating>()
+        //     .HasOne(entity => entity.CustomerOrder)
+        //     .WithMany(entity => entity.Ratings)
+        //     .HasForeignKey(rating => rating.CustomerOrderId);
+        // builder.Entity<Rating>()
+        //     .HasOne(entity => entity.User)
+        //     .WithMany(entity => entity.Ratings)
+        //     .HasForeignKey(rating => rating.UserId);
+        // builder.Entity<Rating>()
+        //     .HasOne(entity => entity.Product)
+        //     .WithMany(entity => entity.Ratings)
+        //     .HasForeignKey(rating => rating.ProductId);
     }
 }
