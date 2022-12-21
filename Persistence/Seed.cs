@@ -182,6 +182,9 @@ public class Seed
 
         _products = new List<Product>();
 
+        var start = new DateTime(2020, 1, 1);
+        var range = (DateTime.Today - start).Days;
+
         for (int i = 0, len = names.Count; i < len; i++)
             _products.Add(new Product
             {
@@ -189,7 +192,8 @@ public class Seed
                 Status = ProductStatus.Available,
                 Quantity = _random.Next(0, 20),
                 Description = desc,
-                Revenue = 0
+                Revenue = 0,
+                DateAdded = start.AddDays(_random.Next(range))
             });
     }
 
