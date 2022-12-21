@@ -1,3 +1,4 @@
+using Application.Core;
 using MediatR;
 using Persistence;
 
@@ -5,12 +6,12 @@ namespace Application.Products;
 
 public class Delete
 {
-    public class Command : IRequest
+    public class Command : IRequest<Result<Unit>>
     {
         public Guid Id { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command>
+    public class Handler : IRequestHandler<Command, Result<Unit>>
     {
         private readonly DataContext _context;
 
@@ -19,14 +20,17 @@ public class Delete
             _context = context;
         }
 
-        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             var product = await _context.Products.FindAsync(request.Id);
+            if (product == null) return null;
 
             _context.Remove(product);
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync() > 0;
 
-            return Unit.Value;
+            if (!result) return Result<Unit>.Failure("Failed to save changes");
+
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

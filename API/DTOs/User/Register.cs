@@ -11,7 +11,7 @@ public class Register
     [Required] [EmailAddress] public string Email { get; set; }
 
     [Required]
-    [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$", ErrorMessage = "Password should be more complex")]
+    [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$", ErrorMessage = "Password should be more complex")]
     public string Password { get; set; }
 
     [Required] public string Name { get; set; }

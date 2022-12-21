@@ -6,15 +6,15 @@ namespace Application.Products;
 
 public class ListStatus
 {
-    public class Query : IRequest<List<ProductStatus>>
+    public class Query : IRequest<Result<List<ProductStatus>>>
     {
     }
 
-    public class Handler : IRequestHandler<Query, List<ProductStatus>>
+    public class Handler : IRequestHandler<Query, Result<List<ProductStatus>>>
     {
-        public async Task<List<ProductStatus>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<List<ProductStatus>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            return EnumsUtils.EnumToList<ProductStatus>();
+            return Result<List<ProductStatus>>.Success(EnumsUtils.EnumToList<ProductStatus>());
         }
     }
 }

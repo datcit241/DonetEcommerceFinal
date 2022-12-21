@@ -1,3 +1,4 @@
+using Application.Core;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +8,12 @@ namespace Application.Products;
 
 public class List
 {
-    public class Query : IRequest<List<Product>>
+    public class Query : IRequest<Result<PagedList<Product>>>
     {
+        public PagingParams QueryParams { get; set; }
     }
 
-    public class Handler : IRequestHandler<Query, List<Product>>
+    public class Handler : IRequestHandler<Query, Result<PagedList<Product>>>
     {
         private readonly DataContext _context;
 
@@ -20,9 +22,22 @@ public class List
             _context = context;
         }
 
-        public async Task<List<Product>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<Product>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            return await _context.Products.Include(entity => entity.Prices).ToListAsync();
+            var query = _context
+                .Products
+                .Include(entity => entity.Prices)
+                .Include(entity => entity.Images)
+                .AsQueryable();
+
+            var products =
+                await PagedList<Product>.CreateAsync(
+                    query,
+                    request.QueryParams.PageNumber,
+                    request.QueryParams.PageSize
+                );
+
+            return Result<PagedList<Product>>.Success(products);
         }
     }
 }

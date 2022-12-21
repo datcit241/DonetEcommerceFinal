@@ -1,9 +1,12 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using API.Middleware;
 using API.Services;
 using Application.Core;
+using Application.Interfaces;
 using Application.Products;
 using Domain;
+using Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -71,10 +74,12 @@ builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddMediatR(typeof(List.Handler).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -30,6 +30,7 @@ public class AccountsController : ControllerBase
     [Route("[Action]")]
     public async Task<ActionResult<UserDTO>> Login(Login login)
     {
+        Console.Out.WriteLine(login);
         var user = await _userManager.FindByEmailAsync(login.Email);
 
         if (user == null) return Unauthorized();
@@ -50,12 +51,19 @@ public class AccountsController : ControllerBase
     {
         if (await _userManager.Users.AnyAsync(user => user.Email == register.Email))
         {
-            return BadRequest("This email address already exists");
+            ModelState.AddModelError("email", "This email address already exists");
+            // return BadRequest("The email address already exists");
         }
 
-        if (await _userManager.Users.AnyAsync(user => user.UserName == register.Email))
+        if (await _userManager.Users.AnyAsync(user => user.UserName == register.UserName))
         {
-            return BadRequest("This username already exists");
+            ModelState.AddModelError("username", "This username already exists");
+            // return BadRequest("The username already exists");
+        }
+
+        if (ModelState.ErrorCount != 0)
+        {
+            return ValidationProblem();
         }
 
         var user = new User
@@ -91,7 +99,8 @@ public class AccountsController : ControllerBase
             Name = user.Name,
             Address = user.Address,
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user)
+            Token = _tokenService.CreateToken(user),
+            Email = user.Email
         };
     }
 }

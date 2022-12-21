@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Domain;
 
 public class Product
@@ -7,8 +9,12 @@ public class Product
     public string? Description { get; set; }
     public ICollection<Image> Images { get; set; }
     public ICollection<Price> Prices { get; set; }
-    public ProductLabel Label { get; set; }
+
+    [Range(0, int.MaxValue, ErrorMessage = "Quantity must be not be negative")]
     public int Quantity { get; set; }
+
+    public DateTime DateAdded { get; set; }
+
     public ICollection<DiscountProduct> Discounts { get; set; }
     public ProductStatus Status { get; set; }
     public ICollection<Rating> Ratings { get; set; }
