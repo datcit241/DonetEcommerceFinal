@@ -1,4 +1,5 @@
 using Application.Core;
+using Application.Queries;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +7,12 @@ using Persistence;
 
 namespace Application.Products;
 
-public class List
+public class ListByCategory
 {
     public class Query : IRequest<Result<PagedList<Product>>>
     {
         public PagingParams QueryParams { get; set; }
+        public List<CategoryValue> CategoryValues { get; set; }
     }
 
     public class Handler : IRequestHandler<Query, Result<PagedList<Product>>>
@@ -26,21 +28,22 @@ public class List
         {
             var query = _context
                 .Products
+                .Include(entity => entity.Categories
+                    .Where(cate => request.CategoryValues.Contains(cate.CategoryValue)))
                 .Include(entity => entity
-                        .Prices
-                    // .OrderByDescending(price => price.DateSet)
-                    // .Take(1))
-                )
+                    .Prices
+                    .OrderByDescending(price => price.DateSet)
+                    .Take(1))
                 .Include(entity => entity.Images.Take(1))
-                // .Include(entity =>
-                //     entity.Discounts.Where(discountProduct =>
-                //         discountProduct.Discount.DiscountStatus == DiscountStatus.OnGoing))
+                .Include(entity =>
+                    entity.Discounts.Where(discountProduct =>
+                        discountProduct.Discount.DiscountStatus == DiscountStatus.OnGoing))
                 .AsQueryable();
 
-            // if (!string.IsNullOrEmpty(request.QueryParams.SearchString))
-            //     query = query.Where(entity => entity.Name.Contains(request.QueryParams.SearchString));
-            //
-            // query = ProductOrderQuery.ApplyOrder(query, request.QueryParams.Order, request.QueryParams.OrderBy);
+            if (string.IsNullOrEmpty(request.QueryParams.SearchString))
+                query = query.Where(entity => entity.Name.Contains(request.QueryParams.SearchString));
+
+            query = ProductOrderQuery.ApplyOrder(query, request.QueryParams.Order, request.QueryParams.OrderBy);
 
             var products =
                 await PagedList<Product>.CreateAsync(

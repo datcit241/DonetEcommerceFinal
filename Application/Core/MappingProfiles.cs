@@ -8,5 +8,7 @@ public class MappingProfiles : Profile
     public MappingProfiles()
     {
         CreateMap<Product, Product>();
+        CreateMap<Coupon, Coupon>();
+        CreateMap<CustomerOrder, CustomerOrder>();
     }
 }

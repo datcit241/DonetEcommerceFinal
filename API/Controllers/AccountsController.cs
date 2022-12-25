@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 namespace API.Controllers;
 
@@ -14,23 +15,24 @@ namespace API.Controllers;
 [Route("api/[Controller]")]
 public class AccountsController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
+    private readonly DataContext _context;
     private readonly SignInManager<User> _signInManager;
     private readonly TokenService _tokenService;
+    private readonly UserManager<User> _userManager;
 
     public AccountsController(UserManager<User> userManager, SignInManager<User> signInManager,
-        TokenService tokenService)
+        TokenService tokenService, DataContext context)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _tokenService = tokenService;
+        _context = context;
     }
 
     [HttpPost]
     [Route("[Action]")]
     public async Task<ActionResult<UserDTO>> Login(Login login)
     {
-        Console.Out.WriteLine(login);
         var user = await _userManager.FindByEmailAsync(login.Email);
 
         if (user == null) return Unauthorized();
@@ -39,7 +41,19 @@ public class AccountsController : ControllerBase
 
         if (result.Succeeded)
         {
-            return CreateUserDto(user);
+            var userDto = CreateUserDto(user);
+
+            var userWithAvatar = await _context
+                .Users
+                .Include(usr => usr.Avatar)
+                .FirstOrDefaultAsync(usr => usr.Id == user.Id);
+            if (userWithAvatar?.Avatar != null)
+            {
+                var avt = userWithAvatar.Avatar;
+                userDto.Avatar = avt.Url + '/' + avt.Name + '.' + avt.Extension;
+            }
+
+            return userDto;
         }
 
         return Unauthorized();
@@ -50,21 +64,12 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult<UserDTO>> Register(Register register)
     {
         if (await _userManager.Users.AnyAsync(user => user.Email == register.Email))
-        {
             ModelState.AddModelError("email", "This email address already exists");
-            // return BadRequest("The email address already exists");
-        }
 
         if (await _userManager.Users.AnyAsync(user => user.UserName == register.UserName))
-        {
             ModelState.AddModelError("username", "This username already exists");
-            // return BadRequest("The username already exists");
-        }
 
-        if (ModelState.ErrorCount != 0)
-        {
-            return ValidationProblem();
-        }
+        if (ModelState.ErrorCount != 0) return ValidationProblem();
 
         var user = new User
         {
@@ -75,10 +80,7 @@ public class AccountsController : ControllerBase
         };
 
         var result = await _userManager.CreateAsync(user, register.Password);
-        if (result.Succeeded)
-        {
-            return CreateUserDto(user);
-        }
+        if (result.Succeeded) return CreateUserDto(user);
 
         return BadRequest("Problem registering user");
     }
@@ -94,7 +96,7 @@ public class AccountsController : ControllerBase
 
     private UserDTO CreateUserDto(User user)
     {
-        return new UserDTO
+        var userDto = new UserDTO
         {
             Name = user.Name,
             Address = user.Address,
@@ -102,5 +104,9 @@ public class AccountsController : ControllerBase
             Token = _tokenService.CreateToken(user),
             Email = user.Email
         };
+        if (user.Avatar != null)
+            userDto.Avatar = user.Avatar.Url + '/' + user.Avatar.Name + '.' + user.Avatar.Extension;
+
+        return userDto;
     }
 }

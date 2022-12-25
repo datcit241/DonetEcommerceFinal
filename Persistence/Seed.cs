@@ -220,6 +220,7 @@ public class Seed
 
             var img = new List<Image>();
             for (; fromImage < toImage; fromImage++) img.Add(_productImages[fromImage]);
+            if (img.Count == 0) img.Add(_productImages[_random.Next(totalImages)]);
 
             _products[i].Images = img;
         }
@@ -260,8 +261,8 @@ public class Seed
             _productCategories.Add(new ProductCategory
             {
                 Product = product,
-                CategoryValue = value,
-                Category = value.Category
+                CategoryValue = value
+                // Category = value.Category
             });
         }
     }

@@ -66,7 +66,7 @@ builder.Services
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = key,
             ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateAudience = false
         };
     });
 
