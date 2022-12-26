@@ -35,7 +35,7 @@ public class AccountsController : ControllerBase
     {
         var user = await _userManager.FindByEmailAsync(login.Email);
 
-        if (user == null) return Unauthorized();
+        if (user == null) return ValidationProblem();
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
@@ -56,7 +56,7 @@ public class AccountsController : ControllerBase
             return userDto;
         }
 
-        return Unauthorized();
+        return ValidationProblem();
     }
 
     [HttpPost]
@@ -99,6 +99,7 @@ public class AccountsController : ControllerBase
         var userDto = new UserDTO
         {
             Name = user.Name,
+            Bio = user.Bio,
             Address = user.Address,
             UserName = user.UserName,
             Token = _tokenService.CreateToken(user),

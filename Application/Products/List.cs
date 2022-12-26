@@ -1,4 +1,5 @@
 using Application.Core;
+using Application.Queries;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,20 +28,19 @@ public class List
             var query = _context
                 .Products
                 .Include(entity => entity
-                        .Prices
-                    // .OrderByDescending(price => price.DateSet)
-                    // .Take(1))
-                )
+                    .Prices
+                    .OrderByDescending(price => price.DateSet)
+                    .Take(1))
                 .Include(entity => entity.Images.Take(1))
-                // .Include(entity =>
-                //     entity.Discounts.Where(discountProduct =>
-                //         discountProduct.Discount.DiscountStatus == DiscountStatus.OnGoing))
+                .Include(entity =>
+                    entity.Discounts.Where(discountProduct =>
+                        discountProduct.Discount.DiscountStatus == DiscountStatus.OnGoing))
                 .AsQueryable();
 
-            // if (!string.IsNullOrEmpty(request.QueryParams.SearchString))
-            //     query = query.Where(entity => entity.Name.Contains(request.QueryParams.SearchString));
-            //
-            // query = ProductOrderQuery.ApplyOrder(query, request.QueryParams.Order, request.QueryParams.OrderBy);
+            if (!string.IsNullOrEmpty(request.QueryParams.SearchString))
+                query = query.Where(entity => entity.Name.Contains(request.QueryParams.SearchString));
+
+            query = ProductOrderQuery.ApplyOrder(query, request.QueryParams.Order, request.QueryParams.OrderBy);
 
             var products =
                 await PagedList<Product>.CreateAsync(

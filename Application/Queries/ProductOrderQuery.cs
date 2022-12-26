@@ -13,12 +13,12 @@ public class ProductOrderQuery
                     if (order == "asc")
                         query = query.OrderBy(
                             entity => entity.Prices
-                                .OrderByDescending(price => price.DateSet).First()
+                                .OrderByDescending(price => price.DateSet).First().Amount
                         );
                     else
                         query = query.OrderByDescending(
                             entity => entity.Prices
-                                .OrderByDescending(price => price.DateSet).First()
+                                .OrderByDescending(price => price.DateSet).First().Amount
                         );
 
                     break;
@@ -42,9 +42,9 @@ public class ProductOrderQuery
                     break;
                 case "status":
                     if (order == "asc")
-                        query = query.OrderBy(entity => entity.Status.ToString());
+                        query = query.OrderBy(entity => entity.Status);
                     else
-                        query = query.OrderByDescending(entity => entity.Status.ToString());
+                        query = query.OrderByDescending(entity => entity.Status);
                     break;
                 default:
                     if (order == "asc")
